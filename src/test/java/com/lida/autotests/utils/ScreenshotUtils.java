@@ -1,7 +1,7 @@
 package com.lida.autotests.utils;
 
-import com.lida.autotests.core.WebDriverSingleton;
-import io.qameta.allure.Attachment;
+import com.lida.autotests.core.driver.WebDriverSingleton;
+import io.qameta.allure.Allure;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -11,15 +11,21 @@ import java.io.*;
 @Log4j2
 public class ScreenshotUtils {
 
-    public static final File TESTNG_DIRECTORY = new File("allure-results");
+    public static final File TESTNG_DIRECTORY = new File("target/surefire-reports");
 
-    @Attachment(value = "Page screenshot", type = "image/png")
-    public static byte[] makeScreenshot() {
-        log.info("Attach screenshot to Allure");
-        return ((TakesScreenshot) WebDriverSingleton.getInstance()
-                .getDriver())
-                .getScreenshotAs(OutputType.BYTES);
+    public static InputStream makeScreenshot() {
+        log.info("Make screenshot");
+        byte[] imgBytes = ((TakesScreenshot) WebDriverSingleton.getDriver()).getScreenshotAs(OutputType.BYTES);
+        return new ByteArrayInputStream(imgBytes);
     }
+
+    public static void attachScreenshotToAllure(String name) {
+         {
+            Allure.addAttachment("FAILED_" + name, "image/png", makeScreenshot(), ".png");
+            log.info("Attached screenshot to Allure");
+        }
+    }
+
 
     public static File saveScreenshot() {
         File screenshot = null;
@@ -29,7 +35,7 @@ public class ScreenshotUtils {
             }
             screenshot = File.createTempFile("screenshot", ".png", TESTNG_DIRECTORY);
             try (FileOutputStream stream = new FileOutputStream(screenshot)) {
-                stream.write(makeScreenshot());
+                stream.write(makeScreenshot().readAllBytes());
             }
         } catch (Throwable e) {
             log.info("Unable to save screenshot", e);

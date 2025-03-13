@@ -11,7 +11,6 @@ import static java.lang.String.format;
 public class FileUtils {
 
     public static final String FILE_DELIMITER = FileSystems.getDefault().getSeparator();
-    private static File file;
 
     public static String getDownloadedFilePath() {
         String[] pathNames = {"src", "test", "downloads"};
@@ -22,6 +21,7 @@ public class FileUtils {
     public static void cleanOldReports() {
         deleteAllFilesInFolder("allure-results");
         deleteAllFilesInFolder("target/logs");
+        deleteAllFilesInFolder("target/surefire-reports");
     }
 
     public static void deleteAllFilesInFolder(String folderPath) {

@@ -1,18 +1,23 @@
 package com.lida.autotests.tests.smoke;
 
+import com.lida.autotests.model.pages.SeleniumPage;
+import com.lida.autotests.model.pages.WikipediaHomePage;
 import com.lida.autotests.tests.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-@Test(description = "Selenium article page picture test", groups = "smoke")
 public class SeleniumPictureTest extends BaseTest {
 
-    @Test
+    private SeleniumPage seleniumPage;
+
+    @Test(description = "Selenium article page picture test")
     public void seleniumPagePictureTest() {
+        WikipediaHomePage wikipediaHomePage = new WikipediaHomePage();
+        wikipediaHomePage.isScreenLoaded();
         wikipediaHomePage.clickSearchField();
         wikipediaHomePage.enterToSearchFieldText("selenium");
-        wikipediaHomePage.clickEnterOnSearchFiled();
-        seleniumPage.isSeleniumPageLoaded();
+        seleniumPage = wikipediaHomePage.clickEnterOnSearchFiled();
+        seleniumPage.isScreenLoaded();
         Assert.assertTrue(seleniumPage.isMainPictureDisplayed());
     }
 }

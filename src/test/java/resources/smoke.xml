@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Smoke Suite" parallel="methods" thread-count="4" configfailurepolicy="continue">
+    <!-- the following parameters must be updated for personal execution -->
+    <listeners>
+        <listener class-name="com.lida.autotests.utils.listeners.TestListener"/>
+        <listener class-name="com.lida.autotests.utils.listeners.ReportPortalListener"/>
+    </listeners>
+    <test name="Smoke tests">
+        <packages>
+            <package name="com.lida.autotests.tests.smoke"></package>
+        </packages>
+    </test> <!-- Test -->
+</suite> <!-- Suite -->

@@ -5,9 +5,19 @@ import lombok.extern.log4j.Log4j2;
 
 
 @Log4j2
-public class WikipediaHomePage {
+public class WikipediaHomePage extends BasePage{
 
     private Element searchField = Element.byXpath("//input[@id ='searchInput']");
+    private Element wikiLogo = Element.byCss(".central-textlogo");
+
+    public WikipediaHomePage openHomePage() {
+        webDriver.get("https://www.wikipedia.org/");
+        return new WikipediaHomePage();
+    }
+
+    public boolean IsWikiLogoDisplayed() {
+         return wikiLogo.isDisplayed(5);
+    }
 
     public void clickSearchField() {
         searchField.click();
@@ -17,7 +27,13 @@ public class WikipediaHomePage {
         searchField.type(searchText);
     }
 
-    public void clickEnterOnSearchFiled() {
+    public SeleniumPage clickEnterOnSearchFiled() {
         searchField.enter();
+        return new SeleniumPage();
 }
+
+    @Override
+    public boolean isScreenLoaded() {
+        return IsWikiLogoDisplayed();
+    }
 }

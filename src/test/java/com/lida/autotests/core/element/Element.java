@@ -1,6 +1,6 @@
 package com.lida.autotests.core.element;
 
-import com.lida.autotests.core.WebDriverSingleton;
+import com.lida.autotests.core.driver.WebDriverSingleton;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -8,18 +8,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.lida.autotests.utils.CommonConstants.DEFAULT_TIME_OUT_IN_SECONDS;
-import static com.lida.autotests.utils.CommonConstants.LONG_TIME_OUT_IN_SECONDS;
 
 @Log4j2
 public class Element {
 
   private final By by;
   private final LocatorManager locatorManager;
-  private final WebDriver webDriver = WebDriverSingleton.getInstance().getDriver();
+  private final WebDriver webDriver = WebDriverSingleton.getDriver();
 
   private Element(By by, LocatorManager locatorManager) {
     this.by = by;
@@ -61,8 +58,6 @@ public class Element {
     new Actions(webDriver).sendKeys(Keys.ENTER).build().perform();
   }
 
-  /*States*/
-
   public boolean isDisplayed(int timeOutInSeconds) {
     log.info("Check " + parseActionFromStateElement("'%s' %s %s"));
     boolean isDisplayed;
@@ -74,40 +69,9 @@ public class Element {
     return isDisplayed;
   }
 
-  public boolean isNotDisplayed() {
-    log.info("Check " + parseActionFromStateElement("'%s' %s %s"));
-    boolean isNotDisplayed;
-    try {
-      isNotDisplayed = waitForInvisibility();
-    } catch (TimeoutException e) {
-      isNotDisplayed = false;
-    }
-    return isNotDisplayed;
-  }
-
-  private boolean isPresent(boolean expected, int timeout) {
-    log.info("Check " + parseActionFromStateElement("'%s' %s %s"));
-    try {
-      webDriver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
-      return (!webDriver.findElements(by).isEmpty()) == expected;
-    } finally {
-      webDriver.manage().timeouts().implicitlyWait(0L, TimeUnit.SECONDS);
-    }
-  }
-
   public WebElement waitForPresence() {
     return new WebDriverWait(webDriver, Duration.ofSeconds(DEFAULT_TIME_OUT_IN_SECONDS))
             .until(ExpectedConditions.presenceOfElementLocated(by));
-  }
-
-  public List<WebElement> waitForPresenceOfAllElements(int timeout) {
-    return new WebDriverWait(webDriver, Duration.ofSeconds(timeout))
-            .until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
-  }
-
-  public WebElement waitForPresenceOfNestedElement(By parentLocator, By childLocator, int timeout) {
-    return new WebDriverWait(webDriver, Duration.ofSeconds(timeout))
-            .until(ExpectedConditions.presenceOfNestedElementLocatedBy(parentLocator, childLocator));
   }
 
   public WebElement waitForVisibility(int timeout) {
@@ -132,25 +96,8 @@ public class Element {
             .until(ExpectedConditions.elementToBeClickable(by));
   }
 
-  public boolean waitForInvisibility() {
-    log.info("Wait until the element is invisible");
-    return new WebDriverWait(webDriver, Duration.ofSeconds(LONG_TIME_OUT_IN_SECONDS))
-            .until(ExpectedConditions.invisibilityOfElementLocated(by));
-  }
-
-  public void waitUntilAttributeGetsValue(String attributeName, String expectedValue) {
-    log.info("Wait until %s attribute gets %s value", attributeName, expectedValue);
-    new WebDriverWait(webDriver, Duration.ofSeconds(DEFAULT_TIME_OUT_IN_SECONDS))
-            .until(
-                    ExpectedConditions.attributeToBe(getWrappedWebElement(), attributeName, expectedValue));
-  }
-
   public WebElement getWrappedWebElement() {
     return waitForPresence();
-  }
-
-  public List<WebElement> getWrappedWebElements(int timeout) {
-    return waitForPresenceOfAllElements(timeout);
   }
 
   public String getText() {

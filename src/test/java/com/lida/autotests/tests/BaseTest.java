@@ -1,16 +1,11 @@
 package com.lida.autotests.tests;
 
 
-import com.lida.autotests.core.WebDriverSingleton;
-import com.lida.autotests.model.pages.WikipediaHomePage;
-import com.lida.autotests.model.pages.SeleniumPage;
-import com.lida.autotests.utils.TestListener;
+import com.lida.autotests.core.driver.WebDriverSingleton;
+import com.lida.autotests.utils.listeners.TestListener;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebDriver;
-import org.testng.ITestResult;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import static com.lida.autotests.utils.FileUtils.cleanOldReports;
 
@@ -18,20 +13,21 @@ import static com.lida.autotests.utils.FileUtils.cleanOldReports;
 @Listeners({TestListener.class})
 public class BaseTest {
 
-    public WikipediaHomePage wikipediaHomePage = new WikipediaHomePage();
-    public SeleniumPage seleniumPage = new SeleniumPage();
+    protected WebDriver webDriver;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void startSession() {
-        log.info("Starting session");
-        WebDriver webDriver = WebDriverSingleton.getInstance().getDriver();
-        log.info("Clear local storage");
+        log.info("Starting WebDriver session for thread: " + Thread.currentThread().getId());
         cleanOldReports();
+        webDriver = WebDriverSingleton.getDriver();
+        webDriver.manage().deleteAllCookies();
         webDriver.get("https://www.wikipedia.org/");
     }
 
-    @AfterSuite(alwaysRun = true)
-    public void closeSession(ITestResult test) {
-        WebDriverSingleton.getInstance().closeDriver();
+    @AfterMethod(alwaysRun = true)
+    public void closeSession() {
+        log.info("Closing WebDriver session for thread: " + Thread.currentThread().getId());
+        WebDriverSingleton.closeDriver();
     }
 }
+

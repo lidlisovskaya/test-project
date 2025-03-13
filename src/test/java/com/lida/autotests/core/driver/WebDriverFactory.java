@@ -1,7 +1,8 @@
-package com.lida.autotests.core;
+package com.lida.autotests.core.driver;
 
 import com.lida.autotests.utils.FileUtils;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -14,9 +15,6 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.HashMap;
 
-import static com.lida.autotests.utils.CommonConstants.DEFAULT_TIME_OUT_IN_SECONDS;
-import static com.lida.autotests.utils.CommonConstants.SHORT_TIME_OUT_IN_SECONDS;
-
 @Log4j2
 public class WebDriverFactory {
 
@@ -25,37 +23,36 @@ public class WebDriverFactory {
 
     public static WebDriver getWebDriver() {
         RemoteWebDriver driver = null;
-        switch (System.getProperty("browser")) {
+        String browser = System.getProperty("browser"); // Default to Chrome
+
+        switch (browser) {
             case "chrome":
                 ChromeOptions options = getChromeOptions();
-                try {
-                    driver = new RemoteWebDriver(new URL(HOST), options);
-                    driver.manage().timeouts()
-                            .implicitlyWait(Duration.ofSeconds(SHORT_TIME_OUT_IN_SECONDS));
-                    driver.manage().timeouts()
-                            .pageLoadTimeout(Duration.ofSeconds(DEFAULT_TIME_OUT_IN_SECONDS));
-                    driver.manage().timeouts()
-                            .scriptTimeout(Duration.ofSeconds(DEFAULT_TIME_OUT_IN_SECONDS));
-                    driver.manage().window().maximize();
-                    log.info("Current browser is Chrome. Screen resolution is: {}", driver.manage().window().getSize());
-                } catch (MalformedURLException e) {
-                    log.info("URL is not correct ");
-                }
+                driver = createDriver(options);
                 break;
             case "firefox":
                 FirefoxOptions firefoxOptions = getFirefoxOptions();
-                try {
-                    driver = new RemoteWebDriver(new URL(HOST), firefoxOptions);
-                    driver.manage().window().maximize();
-                    log.info("Current browser is FireFox. Screen resolution is: {}", driver.manage().window().getSize());
-                } catch (MalformedURLException e) {
-                    log.info("URL is not correct ");
-                }
+                driver = createDriver(firefoxOptions);
                 break;
             default:
-                throw new RuntimeException("No support ");
+                throw new RuntimeException("No supported browser: " + browser);
         }
+        if (driver != null) {
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+            driver.manage().window().maximize();
+        }
+
+        log.info("Created WebDriver instance: " + driver);
         return driver;
+    }
+
+    private static RemoteWebDriver createDriver(MutableCapabilities options) {
+        try {
+            return new RemoteWebDriver(new URL(HOST), options);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Invalid Selenium Grid URL", e);
+        }
     }
 
     private static FirefoxOptions getFirefoxOptions() {
