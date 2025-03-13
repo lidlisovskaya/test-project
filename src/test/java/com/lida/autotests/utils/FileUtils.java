@@ -20,7 +20,6 @@ public class FileUtils {
 
     public static void cleanOldReports() {
         deleteAllFilesInFolder("target/allure-results");
-        deleteAllFilesInFolder("target/logs");
         deleteAllFilesInFolder("target/surefire-reports");
     }
 

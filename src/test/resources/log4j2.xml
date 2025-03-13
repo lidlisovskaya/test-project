@@ -8,7 +8,7 @@
         <Console name="IGNORED_LOGS" target="SYSTEM_OUT">
             <PatternLayout pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %style{%m%n}{cyan}}"/>
         </Console>
-        <File name="FILE" fileName="target/logs/framework.log">
+        <File name="FILE" fileName="target/allure-results/framework.log">
             <PatternLayout pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %style{%m%n}{cyan}}"/>
         </File>
     </Appenders>
