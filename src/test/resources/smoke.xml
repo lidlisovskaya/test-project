@@ -5,6 +5,7 @@
     <listeners>
         <listener class-name="com.lida.autotests.utils.listeners.TestListener"/>
         <listener class-name="com.lida.autotests.utils.listeners.ReportPortalListener"/>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
     <test name="Smoke tests">
         <packages>
