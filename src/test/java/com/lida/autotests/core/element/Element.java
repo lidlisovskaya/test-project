@@ -19,18 +19,16 @@ public class Element {
   public Element(By by) {
     this.by = by;
     this.webDriver = WebDriverSingleton.getDriver();
-    this.wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // Explicit wait
+    this.wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
   }
 
   public static Element byXpath(String xpath, Object... params) {
     String locator = String.format(xpath, params);
-    log.info("Search element by xpath: " + locator);
     return new Element(By.xpath(locator));
   }
 
   public static Element byCss(String css, Object... params) {
     String locator = String.format(css, params);
-    log.info("Search element by css: " + locator);
     return new Element(By.cssSelector(locator));
   }
 
@@ -39,13 +37,11 @@ public class Element {
   }
 
   public void click() {
-    log.info("Clicking element: " + by.toString());
     WebElement element = wait.until(ExpectedConditions.elementToBeClickable(by));
     element.click();
   }
 
   public void type(String text) {
-    log.info("Typing text '" + text + "' into element: " + by.toString());
     WebElement element = getElement();
     element.clear();
     element.sendKeys(text);
