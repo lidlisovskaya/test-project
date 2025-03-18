@@ -1,7 +1,9 @@
 package com.lida.autotests.core.driver;
 
+import com.lida.autotests.utils.listeners.CustomWebDriverListener;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
 
 
 @Log4j2
@@ -12,7 +14,9 @@ public class WebDriverSingleton {
     public static synchronized WebDriver getDriver() {
         if (driverThreadLocal.get() == null) {
             log.info("Creating a new WebDriver instance for thread: " + Thread.currentThread().getId());
-            driverThreadLocal.set(WebDriverFactory.getWebDriver());
+            WebDriver baseDriver = WebDriverFactory.getWebDriver();
+            WebDriver decoratedDriver = new EventFiringDecorator<>(new CustomWebDriverListener()).decorate(baseDriver);
+            driverThreadLocal.set(decoratedDriver);
         }
         return driverThreadLocal.get();
     }

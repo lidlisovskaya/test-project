@@ -3,7 +3,6 @@ package com.lida.autotests.tests;
 
 import com.lida.autotests.core.driver.WebDriverSingleton;
 import com.lida.autotests.utils.listeners.TestListener;
-import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
@@ -30,7 +29,7 @@ public class BaseTest {
     @AfterMethod(alwaysRun = true)
     public void closeSession(ITestResult test) {
         if (test.getStatus() == 2) {
-            attachScreenshotToAllure(test.getTestName());
+            attachScreenshotToAllure(test.getMethod().getMethodName());
         }
         log.info("Closing WebDriver session for thread: " + Thread.currentThread().getId());
         WebDriverSingleton.closeDriver();
