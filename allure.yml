@@ -1,0 +1,12 @@
+allure:
+  results: target/allure-results
+  report: target/allure-report
+  clean: true
+
+report:
+  path: target/allure-report
+  clean: true
+  enable: true
+
+logging:
+  level: info
