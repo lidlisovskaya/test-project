@@ -24,7 +24,6 @@ public class Element {
     this.locatorManager = locatorManager;
   }
 
-  @Step("Search element by xpath. Locator is")
   public static Element byXpath(String xpath, Object... params) {
     String locator = String.format(xpath, params);
     log.info("Search element by xpath. Locator is " + locator);
