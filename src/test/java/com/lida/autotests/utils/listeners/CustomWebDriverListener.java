@@ -7,87 +7,84 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.WebDriverListener;
 
-import static com.lida.autotests.utils.LoggerUtils.getNestedCallerClassMethod;
-
 @Log4j2
 public class CustomWebDriverListener implements WebDriverListener {
 
     @Override
     public void afterAccept(Alert alert) {
-        log.info("Alert was accepted");
+        log.info("Alert accepted.");
     }
 
     @Override
     public void afterDismiss(Alert alert) {
-        log.info("Alert was dismissed");
+        log.info("Alert dismissed.");
     }
 
     @Override
     public void afterTo(WebDriver.Navigation navigation, String url) {
-        log.info("Navigation to {} completed", url);
+        log.info("Navigated to URL: {}", url);
     }
 
     @Override
     public void afterBack(WebDriver.Navigation navigation) {
-        log.info("Navigate back completed");
+        log.info("Navigated back.");
     }
 
     @Override
     public void afterForward(WebDriver.Navigation navigation) {
-        log.info("Navigate forward completed");
+        log.info("Navigated forward.");
     }
 
     @Override
     public void afterRefresh(WebDriver.Navigation navigation) {
-        log.info("The page was refreshed");
+        log.info("Page refreshed.");
     }
 
     @Override
     public void beforeFindElement(WebDriver webDriver, By by) {
-        log.debug("Finding webElement: {}", by);
+        log.debug("Finding element: {}", by);
     }
 
     @Override
-    public void afterFindElement(WebElement element, By by, WebElement result) {
-        log.info("{} Found element by locator: {}", getNestedCallerClassMethod(), by);
+    public void afterFindElement(WebDriver webDriver, By by, WebElement result) {
+        log.info("Element found: {}", by);
     }
 
     @Override
-    public void beforeClick(WebElement webElement) {
-        log.debug("{} Trying to click webElement {}", getNestedCallerClassMethod(), getLocator(webElement));
+    public void beforeClick(WebElement element) {
+        log.debug("Attempting to click: {}", getLocator(element));
     }
 
     @Override
-    public void afterClick(WebElement webElement) {
-        log.info("{} Clicked webElement {}", getNestedCallerClassMethod(), getLocator(webElement));
+    public void afterClick(WebElement element) {
+        log.info("Clicked on element: {}", getLocator(element));
     }
 
     @Override
-    public void beforeSendKeys(WebElement webElement, CharSequence[] charSequences) {
-        log.debug("Trying to change value to {} of webElement: {}", charSequences, getLocator(webElement));
+    public void beforeSendKeys(WebElement element, CharSequence[] keysToSend) {
+        log.debug("Attempting to send keys '{}' to: {}", String.join("", keysToSend), getLocator(element));
     }
 
     @Override
-    public void afterSendKeys(WebElement webElement, CharSequence[] charSequences) {
-        log.info("{} Changed value to {} of webElement: {}", getNestedCallerClassMethod(), charSequences,
-                getLocator(webElement));
+    public void afterSendKeys(WebElement element, CharSequence[] keysToSend) {
+        log.info("Typed '{}' into element: {}", String.join("", keysToSend), getLocator(element));
     }
 
     @Override
-    public void beforeGetText(WebElement webElement) {
-        log.debug("{} Get text from webElement: {}", getNestedCallerClassMethod(), getLocator(webElement));
+    public void beforeGetText(WebElement element) {
+        log.debug("Getting text from element: {}", getLocator(element));
     }
 
     @Override
-    public void afterGetText(WebElement webElement, String s) {
-        log.info("{} The text of {} elements is [{}]", getNestedCallerClassMethod(), getLocator(webElement), s);
+    public void afterGetText(WebElement element, String text) {
+        log.info("Extracted text '{}' from element: {}", text, getLocator(element));
     }
 
     private String getLocator(WebElement element) {
-        if (element == null) {
-            return "UnknownElement";
+        try {
+            return element.toString().split("->")[1].replaceFirst("(?s)(.*)", "$1");
+        } catch (Exception e) {
+            return "Unknown Locator";
         }
-        String[] parts = element.toString().split("->");
-        return parts.length > 1 ? parts[1].trim() : "UnknownElement";
     }
 }
