@@ -43,25 +43,6 @@ public class LocatorManager {
         return new LocatorManager(LocatorStrategy.XPATH, String.format(locator, parameters));
     }
 
-    public By getBy(LocatorStrategy strategy) {
-        switch (strategy) {
-            case CLASS_NAME:
-                return By.className(getLocatorString());
-            case ID:
-                return By.id(getLocatorString());
-            case NAME:
-                return By.name(getLocatorString());
-            case LINK_TEXT:
-                return By.linkText(getLocatorString());
-            case CSS:
-                return By.cssSelector(getLocatorString());
-            case XPATH:
-                return By.xpath(getLocatorString());
-            default:
-                return null;
-        }
-    }
-
     String getLocatorString() {
         return String.format(locator, (Object[]) parameters);
     }
