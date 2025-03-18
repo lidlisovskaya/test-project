@@ -1,6 +1,7 @@
 package com.lida.autotests.core.element;
 
 import com.lida.autotests.core.driver.WebDriverSingleton;
+import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -23,6 +24,7 @@ public class Element {
     this.locatorManager = locatorManager;
   }
 
+  @Step
   public static Element byXpath(String xpath, Object... params) {
     String locator = String.format(xpath, params);
     log.info("Search element by xpath. Locator is " + locator);
@@ -30,6 +32,7 @@ public class Element {
             LocatorManager.byXpath(xpath, params));
   }
 
+  @Step
   public static Element byCss(String css, Object... params) {
     String locator = String.format(css, params);
     log.info("Search element by xpath. Locator is " + locator);
@@ -37,27 +40,33 @@ public class Element {
             LocatorManager.byCss(css, params));
   }
 
+  @Step
   public void click() {
     log.info(parseAction("%s '%s' %s"));
     waitForClickable();
     nativeClick();
   }
+
+  @Step
   public void type(String value) {
     log.info(parseAction("%s in '%s'") + " with a value:" + value);
     WebElement element = getWrappedWebElement();
     element.sendKeys(value);
   }
 
+  @Step
   private void nativeClick() {
     log.info(parseAction("%s '%s' %s"));
     new Actions(webDriver).click(getWrappedWebElement()).build().perform();
   }
 
+  @Step
   public void enter() {
     log.info(String.format("ENTER", webDriver));
     new Actions(webDriver).sendKeys(Keys.ENTER).build().perform();
   }
 
+  @Step
   public boolean isDisplayed(int timeOutInSeconds) {
     log.info("Check " + parseActionFromStateElement("'%s' %s %s"));
     boolean isDisplayed;
@@ -69,37 +78,37 @@ public class Element {
     return isDisplayed;
   }
 
+  @Step
   public WebElement waitForPresence() {
     return new WebDriverWait(webDriver, Duration.ofSeconds(DEFAULT_TIME_OUT_IN_SECONDS))
             .until(ExpectedConditions.presenceOfElementLocated(by));
   }
 
+  @Step
   public WebElement waitForVisibility(int timeout) {
     log.info("Wait element will be visible");
     return new WebDriverWait(webDriver, Duration.ofSeconds(timeout))
             .until(ExpectedConditions.visibilityOfElementLocated(by));
   }
 
+  @Step
   public WebElement waitForVisibility() {
     return waitForVisibility(DEFAULT_TIME_OUT_IN_SECONDS);
   }
 
+  @Step
   public WebElement waitForClickable() {
     log.info("Wait element will be clickable");
     return new WebDriverWait(webDriver, Duration.ofSeconds(DEFAULT_TIME_OUT_IN_SECONDS))
             .until(ExpectedConditions.elementToBeClickable(by));
   }
 
-  public WebElement waitForClickable(int timeout) {
-    log.info("Wait element will be clickable");
-    return new WebDriverWait(webDriver, Duration.ofSeconds(timeout))
-            .until(ExpectedConditions.elementToBeClickable(by));
-  }
-
+  @Step
   public WebElement getWrappedWebElement() {
     return waitForPresence();
   }
 
+  @Step
   public String getText() {
     String text = waitForVisibility().getText();
     log.info("Text from Element is " + text);

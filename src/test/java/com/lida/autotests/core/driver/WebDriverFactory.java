@@ -23,7 +23,7 @@ public class WebDriverFactory {
 
     public static WebDriver getWebDriver() {
         RemoteWebDriver driver = null;
-        String browser = System.getProperty("browser"); // Default to Chrome
+        String browser = System.getProperty("browser");
 
         switch (browser) {
             case "chrome":

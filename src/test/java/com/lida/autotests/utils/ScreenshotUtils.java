@@ -20,12 +20,9 @@ public class ScreenshotUtils {
     }
 
     public static void attachScreenshotToAllure(String name) {
-         {
             Allure.addAttachment("FAILED_" + name, "image/png", makeScreenshot(), ".png");
             log.info("Attached screenshot to Allure");
         }
-    }
-
 
     public static File saveScreenshot() {
         File screenshot = null;
