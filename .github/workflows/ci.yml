@@ -27,14 +27,15 @@ jobs:
 
       - name: Run Smoke Tests
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
-        continue-on-error: true
+        continue-on-error: true  # Continue even if tests fail
+
+      - name: Generate Allure Report
+        run: mvn allure:report
 
       - name: Archive test results
         if: always()
-        run: >-
-          zip -r report.zip
-          qa/target/surefire-reports/*.xml
-          qa/allure-results
+        run: |
+          zip -r report.zip qa/target/surefire-reports/*.xml qa/allure-results
 
       - name: Upload a Build Artifact
         if: always()
@@ -60,7 +61,6 @@ jobs:
       - name: Generate subfolder name from workflow name
         id: subfolder
         run: |
-          # regex replace all non-symbols with '-' and lowercase
           echo "subfolder=$(echo $GITHUB_WORKFLOW | sed -E 's/[^a-zA-Z0-9]+/-/g' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Load test report history
@@ -81,20 +81,18 @@ jobs:
           keep_reports: '20'
           report_url: "https://github.com/lidlisovskaya/test-project/${{ steps.subfolder.outputs.subfolder }}"
 
-      - name: Publish test report
+      - name: Publish test report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         if: always()
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target/allure-report
+          publish_dir: allure-report
           publish_branch: gh-pages
           user_name: 'GitHub Actions'
           user_email: 'actions@github.com'
 
-      - name: Generate report list using Markdown
+      - name: Generate report link in summary
         run: |
-          echo "Link to the Allure report:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "https://github.com/lidlisovskaya/test-project/${{ steps.subfolder.outputs.subfolder }}/${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
-      - name: Generate Allure Report
-        run: mvn allure:report
+          echo "## Allure Report " >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # Blank line
+          echo "[ View Allure Report](https://github.com/lidlisovskaya/test-project/${{ steps.subfolder.outputs.subfolder }})" >> $GITHUB_STEP_SUMMARY
