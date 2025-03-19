@@ -1,0 +1,5 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"skipped","Wed Mar 19 23:05:06 GMT 2025","Wed Mar 19 23:05:06 GMT 2025","205","Smoke Suite","Smoke tests","com.lida.autotests.tests.smoke.SeleniumPictureTest","com.lida.autotests.tests.smoke.SeleniumPictureTest","seleniumPagePictureTest","Selenium article page picture test",""
+"skipped","Wed Mar 19 23:05:06 GMT 2025","Wed Mar 19 23:05:06 GMT 2025","203","Smoke Suite","Smoke tests","com.lida.autotests.tests.smoke.WikipediaSearchTest","com.lida.autotests.tests.smoke.WikipediaSearchTest","wikipediaSearchTest","Wikipedia search test",""
+"broken","Wed Mar 19 23:05:06 GMT 2025","Wed Mar 19 23:05:06 GMT 2025","2","Smoke Suite","Smoke tests","com.lida.autotests.tests.smoke.WikipediaSearchTest","com.lida.autotests.tests.smoke.WikipediaSearchTest","startSession","startSession",""
+"broken","Wed Mar 19 23:05:06 GMT 2025","Wed Mar 19 23:05:06 GMT 2025","3","Smoke Suite","Smoke tests","com.lida.autotests.tests.smoke.SeleniumPictureTest","com.lida.autotests.tests.smoke.SeleniumPictureTest","startSession","startSession",""
