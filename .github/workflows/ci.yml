@@ -35,7 +35,7 @@ jobs:
       - name: Archive test results
         if: always()
         run: |
-          zip -r report.zip qa/target/surefire-reports/*.xml qa/allure-results
+          zip -r report.zip target/surefire-reports/*.xml target/allure-results
 
       - name: Upload a Build Artifact
         if: always()
