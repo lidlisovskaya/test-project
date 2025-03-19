@@ -1,0 +1,46 @@
+name: Build and Run Tests with Allure Report
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build Maven Project
+        run: mvn clean install -DskipTests
+
+      - name: Run Smoke Tests
+        run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
+        continue-on-error: true
+
+      - name: Generate Allure Report
+        run: mvn allure:report
+
+      - name: Upload Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/allure-report
+          publish_branch: gh-pages
+          user_name: 'GitHub Actions'
+          user_email: 'actions@github.com'
+
+      - name: Display Allure Report URL
+        run: mvn allure:serve
+        echo "Allure Report is available at: https://lidlisovskaya.github.io/test-project/allure-report/"
