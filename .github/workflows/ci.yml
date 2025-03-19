@@ -29,11 +29,61 @@ jobs:
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
         continue-on-error: true
 
-      - name: Generate Allure Report
-        run: mvn allure:report
+      - name: Archive test results
+        if: always()
+        run: >-
+          zip -r report.zip
+          qa/target/surefire-reports/*.xml
+          qa/allure-results
 
-      - name: Upload Allure Report to GitHub Pages
+      - name: Upload a Build Artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: report
+          path: report.zip
+
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3
+
+      - name: Unzip test results
+        run: |
+          ls -la
+          find . -name '*.zip' -execdir unzip '{}' \;
+
+      - name: Aggregate Allure results
+        run: |
+          mkdir -p aggregated-allure-results
+          find . -type d -name 'allure-results' -exec sh -c 'cp -r "$0"/* aggregated-allure-results/' {} \;
+          rm -rf report-*/allure-results
+
+      - name: Generate subfolder name from workflow name
+        id: subfolder
+        run: |
+          # regex replace all non-symbols with '-' and lowercase
+          echo "subfolder=$(echo $GITHUB_WORKFLOW | sed -E 's/[^a-zA-Z0-9]+/-/g' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Load test report history
+        uses: actions/checkout@v3
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.9
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: aggregated-allure-results
+          allure_report: allure-report
+          subfolder: ${{ steps.subfolder.outputs.subfolder }}
+          keep_reports: '20'
+          report_url: "https://github.com/lidlisovskaya/test-project/${{ steps.subfolder.outputs.subfolder }}"
+
+      - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
+        if: always()
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/allure-report
@@ -41,6 +91,10 @@ jobs:
           user_name: 'GitHub Actions'
           user_email: 'actions@github.com'
 
-      - name: Display Allure Report URL
-        run: mvn allure:serve
-        echo "Allure Report is available at: https://lidlisovskaya.github.io/test-project/allure-report/"
+      - name: Generate report list using Markdown
+        run: |
+          echo "Link to the Allure report:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "https://github.com/lidlisovskaya/test-project/${{ steps.subfolder.outputs.subfolder }}/${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+      - name: Generate Allure Report
+        run: mvn allure:report
