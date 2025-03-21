@@ -98,7 +98,7 @@
                 <configuration>
                     <argLine>--enable-preview</argLine>
                     <suiteXmlFiles>
-                        <suiteXmlFile>${surefire.suiteXmlFile}</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/smoke.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <testFailureIgnore>false</testFailureIgnore>
                     <properties>
