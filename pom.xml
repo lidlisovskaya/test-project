@@ -8,7 +8,7 @@
     <artifactId>test-project</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-        <surefire.suiteXmlFile></surefire.suiteXmlFile>
+        <surefire.suiteXmlFile>${surefire.suiteXmlFile}</surefire.suiteXmlFile>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
