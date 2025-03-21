@@ -23,11 +23,17 @@ jobs:
           java-version: '21'
 
       - name: Set up Maven
-        run: |
-          wget https://apache.claz.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
-          tar -xzf apache-maven-3.9.9-bin.tar.gz
-          sudo mv apache-maven-3.9.9 /opt/maven
-          sudo ln -s /opt/maven/bin/mvn /usr/local/bin/mvn
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.2
+
+      - name: Cache Maven
+        uses: actions/cache@v3
+        with:
+            path: ~/.m2/repository
+            key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+            restore-keys: |
+              maven-${{ runner.os }}-
 
       - name: Set Executable Permissions (For Windows Self-Hosted Runners)
         if: runner.os == 'Windows'
