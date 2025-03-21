@@ -41,7 +41,7 @@ jobs:
           Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 
       - name: Run Smoke Tests
-        run: mvn clean test -B -Dbrowser=chrome -DsuiteXmlFiles=src/test/resources/smoke.xml
+        run:  mvn clean test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
         continue-on-error: true
 
       - name: Generate Allure Report
