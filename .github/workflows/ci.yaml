@@ -16,10 +16,10 @@ jobs:
       - name: Set up Maven
         uses: stCarolas/setup-maven@v4.5
         with:
-          maven-version: 3.8.2
+          maven-version: 3.9.9
 
-      - name: Cache maven
-        uses: actions/cache@v3.3.2
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
