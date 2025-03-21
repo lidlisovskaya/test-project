@@ -20,4 +20,5 @@ public class SeleniumPictureTest extends BaseTest {
         seleniumPage.isScreenLoaded();
         Assert.assertTrue(seleniumPage.isMainPictureDisplayed());
     }
+
 }
