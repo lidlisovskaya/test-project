@@ -23,9 +23,11 @@ jobs:
           java-version: '21'
 
       - name: Set up Maven
-        uses: s4u/setup-maven-action@v1
-        with:
-          maven-version: '3.9.9'
+        run: |
+          wget https://apache.claz.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
+          tar -xzf apache-maven-3.9.9-bin.tar.gz
+          sudo mv apache-maven-3.9.9 /opt/maven
+          sudo ln -s /opt/maven/bin/mvn /usr/local/bin/mvn
 
       - name: Set Executable Permissions (For Windows Self-Hosted Runners)
         if: runner.os == 'Windows'
