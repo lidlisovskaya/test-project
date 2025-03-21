@@ -33,7 +33,6 @@ jobs:
       - name: Run Smoke Tests
         run: >
           mvn clean test -U -B
-          -Dfile.encoding=utf-8
           -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
           -Dbrowser=chrome
         continue-on-error: true
