@@ -33,7 +33,6 @@ jobs:
       - name: Run Smoke Tests
         run: |
           mvn clean test -U -B
-          -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
         continue-on-error: true
 
       - name: Generate Allure Report
