@@ -22,6 +22,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Set Executable Permissions (For Windows Self-Hosted Runners)
+        if: runner.os == 'Windows'
+        run: |
+          Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
+
       - name: Build Maven Project
         run: mvn clean install -DskipTests
 
@@ -64,7 +69,7 @@ jobs:
           echo "subfolder=$(echo $GITHUB_WORKFLOW | sed -E 's/[^a-zA-Z0-9]+/-/g' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Load test report history
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         continue-on-error: true
         with:
           ref: gh-pages
@@ -86,7 +91,7 @@ jobs:
         if: always()
         with:
           personal_token: ${{ secrets.GH_PAT }}
-          publish_dir: allure-report
+          publish_dir: ./gh-pages/${{ steps.subfolder.outputs.subfolder }}
           publish_branch: gh-pages
           user_name: 'GitHub Actions'
           user_email: 'actions@github.com'
