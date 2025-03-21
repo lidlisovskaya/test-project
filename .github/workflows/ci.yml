@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Smoke Tests
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
-        continue-on-error: true  # Continue even if tests fail
+        continue-on-error: true
 
       - name: Generate Allure Report
         run: mvn allure:report
