@@ -22,16 +22,18 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+          name: Set up Maven
+          uses: s4u/setup-maven-action@v1
+          with:
+            maven-version: '3.9.9'
+
       - name: Set Executable Permissions (For Windows Self-Hosted Runners)
         if: runner.os == 'Windows'
         run: |
           Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 
-      - name: Build Maven Project
-        run: mvn clean install -DskipTests
-
       - name: Run Smoke Tests
-        run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
+        run: mvn clean test -B -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/smoke.xml
         continue-on-error: true
 
       - name: Generate Allure Report
