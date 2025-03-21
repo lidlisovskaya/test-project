@@ -23,7 +23,7 @@ public class WebDriverFactory {
 
     public static WebDriver getWebDriver() {
         RemoteWebDriver driver = null;
-        String browser = System.getProperty("browser");
+        String browser = System.getProperty("browser", "chrome").toLowerCase();
 
         switch (browser) {
             case "chrome":
