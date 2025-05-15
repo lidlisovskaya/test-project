@@ -85,26 +85,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
-                <dependencies>
-                    <!-- https://mvnrepository.com/artifact/org.apache.maven.surefire/surefire-testng -->
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-testng</artifactId>
-                        <version>3.5.2</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
-                    <argLine>--enable-preview</argLine>
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/smoke.xml</suiteXmlFile>
+                        <suiteXmlFile>surefire-testng</suiteXmlFile>
                     </suiteXmlFiles>
-                    <testFailureIgnore>false</testFailureIgnore>
-                    <properties>
-                        <property>
-                            <name>configfailurepolicy</name>
-                            <value>continue</value>
-                        </property>
-                    </properties>
                 </configuration>
             </plugin>
             <plugin>
